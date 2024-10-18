@@ -1,52 +1,29 @@
-- remote_user: ubuntu
-  hosts: all
-  become: yes
-  tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
+- name: Install dependencies for Docker repository
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    state: present
 
-    - name: Install dependencies for Docker repository
-      apt:
-        name:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - software-properties-common
-        state: present
+- name: Add Docker's official GPG key
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/trusted.gpg.d/docker.asc
 
-    - name: Add Docker's official GPG key
-      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+- name: Add Docker repository
+  shell: echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
 
-    - name: Add Docker repository
-      shell: "echo deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable | tee /etc/apt/sources.list.d/docker.list"
-      become: yes
+- name: Update apt cache
+  apt:
+    update_cache: yes
 
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: present
 
-    - name: Install Docker
-      apt:
-        name: docker-ce
-        state: present
-
-    - name: Start Docker service
-      service:
-        name: docker
-        state: started
-
-    - name: Pull Docker image
-      docker_image:
-        name: containerguru1/sample-nodejs-app
-        tag: latest
-
-    - name: Run Docker container
-      docker_container:
-        name: sample-nodejs-app
-        image: containerguru1/sample-nodejs-app
-        state: started
-        ports:
-          - "80:80"
-
-    - name: Ensure Nginx is installed
-      apt:
-        name: nginx
-        state: present
+- name: Start Docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
