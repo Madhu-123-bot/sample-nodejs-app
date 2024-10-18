@@ -34,7 +34,7 @@
     # Moved Docker login before pulling the image
     - name: Log in to Docker Hub
       docker_login:
-        username: "containerGuru1"
+        username: "containerguru1"
         password: "Madmithra!27"
 
     - name: Pull Docker image from Docker Hub
