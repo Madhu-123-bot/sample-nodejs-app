@@ -21,3 +21,7 @@
         state: started
         ports:
           - "80:80"
+    - name: Ensure Nginx is installed
+      apt:
+        name: nginx
+        state: present
