@@ -30,3 +30,18 @@
         name: docker
         state: started
         enabled: yes
+
+    - name: Pull Docker image from Docker Hub
+      docker_image:
+        name: sample-nodejs-app
+        tag: latest
+        source: pull
+    
+    - name: Run Docker container
+      docker_container:
+        name: my_container
+        image: sample-nodejs-app
+        state: started
+        restart_policy: always
+        ports:
+          - "81:80"  # Adjust the po
