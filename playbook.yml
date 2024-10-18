@@ -33,15 +33,20 @@
 
     - name: Pull Docker image from Docker Hub
       docker_image:
-        name: sample-nodejs-app
+        name: containerguru1/sample-nodejs-app
         tag: latest
         source: pull
+
+    - name: Log in to Docker Hub
+      docker_login:
+        username: "containerGuru1"
+        password: "Madmithra!27"   
     
     - name: Run Docker container
       docker_container:
         name: my_container
-        image: sample-nodejs-app
+        image: containerguru1/sample-nodejs-app
         state: started
         restart_policy: always
         ports:
-          - "81:80"  # Adjust the po
+          - "81:80"  # Adjust the ports
