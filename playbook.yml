@@ -31,17 +31,18 @@
         state: started
         enabled: yes
 
+    # Moved Docker login before pulling the image
+    - name: Log in to Docker Hub
+      docker_login:
+        username: "containerGuru1"
+        password: "Madmithra!27"
+
     - name: Pull Docker image from Docker Hub
       docker_image:
         name: containerguru1/sample-nodejs-app
         tag: latest
         source: pull
 
-    - name: Log in to Docker Hub
-      docker_login:
-        username: "containerGuru1"
-        password: "Madmithra!27"   
-    
     - name: Run Docker container
       docker_container:
         name: my_container
@@ -49,4 +50,4 @@
         state: started
         restart_policy: always
         ports:
-          - "81:80"  # Adjust the ports
+          - "81:80"  # Adjust the ports as needed
