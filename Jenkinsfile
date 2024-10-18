@@ -28,15 +28,17 @@ pipeline {
 
     stage('Deploy to AWS EC2') {
       steps {
-        // Set the path to Ansible in case Jenkins can't find it
-        withEnv(["PATH+ANSIBLE=/usr/local/bin:/usr/bin"]) {
-          ansiblePlaybook(
-            playbook: 'playbook.yml',     // Ensure your Ansible playbook is named correctly
-            inventory: 'hosts.txt',           // Ensure this file contains the correct EC2 hosts
-            credentialsId: 'ansible-ssh-key'
-          )
+        script {
+          // Set the path to Ansible in case Jenkins can't find it
+          withEnv(["PATH+ANSIBLE=/usr/local/bin:/usr/bin"]) {
+            // Use sh step to run ansible-playbook command
+            sh '''
+              ansible-playbook playbook.yml -i hosts.txt --private-key /var/lib/jenkins/workspace/Pipeline-project/ssh8633610058472328627.key -u ubuntu
+            '''
+          }
         }
       }
     }
   }
 }
+

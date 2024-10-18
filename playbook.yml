@@ -1,27 +1,34 @@
-- remote_user: ubuntu
-  hosts:  all
+- hosts: all
+  remote_user: ubuntu
   become: yes
+  ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
   tasks:
     - name: installing docker
       apt:
         name: docker.io
-        state:  present
+        state: present
+
     - name: starting the docker
       service:
         name: docker.io
-        state:  started
+        state: started
+
     - name: Pull docker image
       docker_image:
         name: containerguru1/sample-nodejs-app
         tag: latest
+
     - name: Run Docker container
       docker_container:
-        name: sample-nodejs-app
-        image:  containerguru1/sample-nodejs-app
-        state: started
-        ports:
-          - "80:80"
+      name: sample-nodejs-app
+      image: containerguru1/sample-nodejs-app
+      state: started
+      restart_policy: always
+      ports:
+        - "80:80"
+
     - name: Ensure Nginx is installed
       apt:
         name: nginx
         state: present
+
