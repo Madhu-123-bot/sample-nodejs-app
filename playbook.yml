@@ -4,12 +4,12 @@
   tasks:
     - name: Install Docker
       apt:
-        name: docker.io
+        name: docker
         state: present
 
     - name: Start Docker service
       service:
-        name: docker.io
+        name: docker
         state: started
 
     - name: Pull Docker image
