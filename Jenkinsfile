@@ -3,11 +3,10 @@ pipeline {
 
   stages {
     stage('Checkout') {
-  steps {
-    git branch: 'main', url: 'https://github.com/Madhu-123-bot/sample-nodejs-app.git'
+      steps {
+        git branch: 'main', url: 'https://github.com/Madhu-123-bot/sample-nodejs-app.git'
       }
     }
-
 
     stage('Build Docker Image') {
       steps {
@@ -29,11 +28,14 @@ pipeline {
 
     stage('Deploy to AWS EC2') {
       steps {
-        ansiblePlaybook(
-          playbook: 'playbook.yml',     // Ensure your Ansible playbook is named correctly
-          inventory: 'hosts',           // Ensure this file contains the correct EC2 hosts
-          credentialsId: 'ansible-ssh-key'
-        )
+        // Set the path to Ansible in case Jenkins can't find it
+        withEnv(["PATH+ANSIBLE=/usr/local/bin:/usr/bin"]) {
+          ansiblePlaybook(
+            playbook: 'playbook.yml',     // Ensure your Ansible playbook is named correctly
+            inventory: 'hosts.txt',           // Ensure this file contains the correct EC2 hosts
+            credentialsId: 'ansible-ssh-key'
+          )
+        }
       }
     }
   }
